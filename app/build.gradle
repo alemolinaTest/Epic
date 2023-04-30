@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-  compileSdk 32
+  compileSdk 33
 
   defaultConfig {
     applicationId "com.amolina.epic"
-    minSdk 31
-    targetSdk 32
+    minSdk 33
+    targetSdk 33
     versionCode 1
     versionName "1.0"
 
@@ -61,13 +61,9 @@ dependencies {
   //Hilt
   implementation 'com.google.dagger:hilt-android:2.46'
   kapt 'com.google.dagger:hilt-android-compiler:2.46'
-  implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
   kapt "androidx.hilt:hilt-compiler:1.0.0"
 
-  implementation 'androidx.core:core-ktx:1.10.0'
-  implementation 'androidx.appcompat:appcompat:1.6.1'
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
-  implementation "androidx.fragment:fragment-ktx:1.6.1"
   implementation "androidx.activity:activity-ktx:1.7.1"
   implementation 'androidx.fragment:fragment:1.5.7'
 }

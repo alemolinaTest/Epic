@@ -1,7 +1,9 @@
 package com.amolina.epic.data.di
 
-import com.amolina.epic.data.api.ApiService
+import com.amolina.epic.data.api.ApiServices
 import com.amolina.epic.data.repository.DataEpicRepository
+import com.amolina.epic.domain.interactor.FetchDates
+import com.amolina.epic.domain.interactor.FetchImageData
 import com.amolina.epic.domain.repository.EpicRepository
 import dagger.Binds
 import dagger.Module
@@ -17,15 +19,14 @@ import javax.inject.Singleton
 object RepoModule {
 
   @Provides
-  fun provideApiService(retrofit: Retrofit): ApiService =
-    retrofit.create(ApiService::class.java)
+  fun provideApiService(retrofit: Retrofit): ApiServices =
+    retrofit.create(ApiServices::class.java)
 
   @Provides
   @Singleton
   fun provideEpicRepository(
-    apiService: ApiService,
-    @IODispatcher dispatcher: CoroutineDispatcher
+    apiService: ApiServices
   ): EpicRepository =
-    DataEpicRepository(apiService = apiService, dispatcher = dispatcher)
+    DataEpicRepository(apiService = apiService)
 
 }
