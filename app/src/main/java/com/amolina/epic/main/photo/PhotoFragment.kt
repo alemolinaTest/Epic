@@ -5,14 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -24,16 +20,18 @@ import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.amolina.epic.R
 import com.amolina.epic.compose.LoadingScreen
 import com.amolina.epic.databinding.LayoutComposeContainerBinding
@@ -52,6 +50,8 @@ class PhotoFragment : Fragment(R.layout.layout_compose_container) {
   private val viewModel: MainViewModel by activityViewModels()
   private val navigation by lazy { findNavController() }
 
+  private val screenArgs: PhotoFragmentArgs by navArgs()
+
   companion object {
     private const val THUMBNAIL_DIMENSION = 50
     private val THUMBNAIL_SIZE = Size(THUMBNAIL_DIMENSION.toFloat(), THUMBNAIL_DIMENSION.toFloat())
@@ -60,6 +60,8 @@ class PhotoFragment : Fragment(R.layout.layout_compose_container) {
   @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    viewModel.getImageData(screenArgs.selectedDay)
 
     (view as ComposeView).apply {
       setContent {
@@ -124,43 +126,29 @@ class PhotoFragment : Fragment(R.layout.layout_compose_container) {
           state = listState
         ) {
           items(imagesCollection.imagesData) { image ->
-            Row(
-              Modifier
-                .padding(15.dp)
-                .height(22.dp),
-            ) {
-
-              Icon(
-                painter = painterResource(R.drawable.empty_circle),
-                tint = Color.Black,
-                contentDescription = "dayDescription"
-              )
-              Spacer(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
-              Text(text = image.url, color = Color.Black)
-            }
-
-//            GlideImage(
-//              imageModel = image.url,
-//              // shows a progress indicator when loading an image.
-//              loading = {
-//                ConstraintLayout(
-//                  modifier = Modifier.fillMaxSize()
-//                ) {
-//                  val indicator = createRef()
-//                  CircularProgressIndicator(
-//                    modifier = Modifier.constrainAs(indicator) {
-//                      top.linkTo(parent.top)
-//                      bottom.linkTo(parent.bottom)
-//                      start.linkTo(parent.start)
-//                      end.linkTo(parent.end)
-//                    }
-//                  )
-//                }
-//              },
-//              // shows an error text message when request failed.
-//              failure = {
-//                Text(text = "image request failed.")
-//              })
+            GlideImage(
+              imageModel = { image.url} ,
+              modifier = Modifier.padding(top = 2.dp, bottom = 2.dp),
+              // shows a progress indicator when loading an image.
+              loading = {
+                ConstraintLayout(
+                  modifier = Modifier.fillMaxSize()
+                ) {
+                  val indicator = createRef()
+                  CircularProgressIndicator(
+                    modifier = Modifier.constrainAs(indicator) {
+                      top.linkTo(parent.top)
+                      bottom.linkTo(parent.bottom)
+                      start.linkTo(parent.start)
+                      end.linkTo(parent.end)
+                    }
+                  )
+                }
+              },
+              // shows an error text message when request failed.
+              failure = {
+                Text(text = "image request failed.")
+              })
           }
         }
       }

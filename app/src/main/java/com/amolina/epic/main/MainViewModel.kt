@@ -40,7 +40,6 @@ class MainViewModel @Inject constructor(
       val dates = fetchDates.invoke()
       val selectedDates = dates.take(daysCount)
       _allDatesData.value = DatesCollection(dates = selectedDates)
-      getImagesData(selectedDates)
     }
   }
 
@@ -51,6 +50,17 @@ class MainViewModel @Inject constructor(
         for (image in imagesData) {
           _mutableImagesData.add(image.copy(url = image.getImageDownloadIdentifier()))
         }
+      }
+      _allImagesData.value = ImagesDataCollection(imagesData = _mutableImagesData)
+    }
+  }
+
+  fun getImageData(selectedDates: String) {
+    launch {
+
+      val imagesData = fetchImageData.invoke(selectedDates)
+      for (image in imagesData) {
+        _mutableImagesData.add(image.copy(url = image.getImageDownloadIdentifier()))
       }
       _allImagesData.value = ImagesDataCollection(imagesData = _mutableImagesData)
     }
