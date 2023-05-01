@@ -1,7 +1,7 @@
 package com.amolina.epic.data.repository
 
 import com.amolina.epic.data.api.ApiServices
-import com.amolina.epic.domain.model.DatesCollection
+import com.amolina.epic.domain.model.DatesData
 import com.amolina.epic.domain.model.ImagesData
 import com.amolina.epic.domain.repository.EpicRepository
 import kotlinx.coroutines.Dispatchers
@@ -12,43 +12,37 @@ class DataEpicRepository @Inject constructor(
   private var apiService: ApiServices,
 ) : EpicRepository {
 
-  override suspend fun getAllDates(): DatesCollection {
+  override suspend fun getAllDates(): List<DatesData> {
     return withContext(Dispatchers.IO) {
       try {
         val dates =
           apiService.getAvailableDates()
-        val list = mutableListOf<String>()
+        val list = mutableListOf<DatesData>()
         for (date in dates) {
-          list.add(date.date)
+          list.add(date.toModel())
         }
 
-        DatesCollection(
-          dates = list
-        )
+        list
       } catch (e: Exception) {
-        DatesCollection(
-          dates = emptyList()
-        )
+        listOf<DatesData>()
       }
     }
   }
 
-  override suspend fun getImageData(date: String): List<String> {
+  override suspend fun getImageData(date: String): List<ImagesData> {
     return withContext(Dispatchers.IO) {
       try {
         val imagesData = apiService.getImagesData(date = date)
 
-        val list = mutableListOf<String>()
+        val list = mutableListOf<ImagesData>()
         for (imageData in imagesData) {
-          val model= imageData.toModel()
-          val url= model.getImageDownloadIdentifier()
-          list.add(url)
+          val imageData = imageData.toModel(searchDate = date)
+          val url = imageData.getImageDownloadIdentifier()
+          list.add(imageData)
         }
         list
       } catch (e: Exception) {
-        listOf(
-          ""
-        )
+        listOf<ImagesData>()
       }
     }
   }

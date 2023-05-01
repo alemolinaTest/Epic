@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.amolina.epic.common.AsyncStateViewModel
 import com.amolina.epic.domain.interactor.FetchDates
 import com.amolina.epic.domain.interactor.FetchImageData
+import com.amolina.epic.domain.model.DatesCollection
+import com.amolina.epic.domain.model.DatesData
 import com.amolina.epic.domain.model.ImagesData
+import com.amolina.epic.domain.model.ImagesDataCollection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -23,33 +26,33 @@ class MainViewModel @Inject constructor(
     getDates(daysCount = DAYS_COUNT)
   }
 
-  private val _allDatesData = MutableLiveData<List<String>>()
-  val allDatesData: LiveData<List<String>> = _allDatesData
+  private val _allDatesData = MutableLiveData<DatesCollection>()
+  val allDatesData: LiveData<DatesCollection> = _allDatesData
 
-  private val _allImagesData = MutableLiveData<List<String>>()
-  val allImagesData: LiveData<List<String>> = _allImagesData
+  private val _allImagesData = MutableLiveData<ImagesDataCollection>()
+  val allImagesData: LiveData<ImagesDataCollection> = _allImagesData
 
-  private val _mutableImagesData = mutableListOf<String>()
+  private val _mutableImagesData = mutableListOf<ImagesData>()
 
   private fun getDates(daysCount: Int) {
 
-    launchHandlingStates {
+    launch {
       val dates = fetchDates.invoke()
-      val selectedDates = dates.getAllDates().take(daysCount)
-      _allDatesData.value = selectedDates
+      val selectedDates = dates.take(daysCount)
+      _allDatesData.value = DatesCollection(dates = selectedDates)
       getImagesData(selectedDates)
     }
   }
 
-  private fun getImagesData(selectedDates: List<String>) {
-    launchHandlingStates {
+  private fun getImagesData(selectedDates: List<DatesData>) {
+    launch {
       for (date in selectedDates) {
-        val imagesData = fetchImageData.invoke(date)
+        val imagesData = fetchImageData.invoke(date.date)
         for (image in imagesData) {
-          _mutableImagesData.add(image)
+          _mutableImagesData.add(image.copy(url = image.getImageDownloadIdentifier()))
         }
       }
-      _allImagesData.value = _mutableImagesData
+      _allImagesData.value = ImagesDataCollection(imagesData = _mutableImagesData)
     }
   }
 }

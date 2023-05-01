@@ -3,6 +3,9 @@ package com.amolina.epic.main
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import com.amolina.epic.R
 import com.amolina.epic.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,10 +21,15 @@ class MainActivity : AppCompatActivity() {
     binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    mainActivityViewModel.allDatesData.observe(this) {
-      if (it.isEmpty()) {
-
-      }
-    }
+    // Set up nav controller
+    val navHostFragment =
+      supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
+//    //NavigationUI.setupActionBarWithNavController(this, navHostFragment.navController)
+//
+//    mainActivityViewModel.allDatesData.observe(this) {
+//      if (it.dates.isEmpty()) {
+//
+//      }
+//    }
   }
 }
