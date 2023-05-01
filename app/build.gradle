@@ -46,7 +46,8 @@ kapt {
 
 dependencies {
 
-  implementation project(':domain')
+  implementation project(path: ':domain')
+  implementation project(path: ':data')
 
   implementation "androidx.core:core-splashscreen:1.0.1"
 

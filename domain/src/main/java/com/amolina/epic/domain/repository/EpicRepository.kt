@@ -13,5 +13,5 @@ interface EpicRepository {
   /**
    * Fetch for image data for a date
    */
-  suspend fun getImageData(date: String): ImagesData
+  suspend fun getImageData(date: String): List<String>
 }

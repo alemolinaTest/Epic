@@ -23,4 +23,5 @@ object UseCasesModule {
     @Singleton
     fun provideFetchImageDataUseCase(epicRepository: EpicRepository) =
         FetchImageData(epicRepository = epicRepository)
+
 }

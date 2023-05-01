@@ -4,7 +4,6 @@ import com.amolina.epic.data.api.ApiServices
 import com.amolina.epic.domain.model.DatesCollection
 import com.amolina.epic.domain.model.ImagesData
 import com.amolina.epic.domain.repository.EpicRepository
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,8 +17,14 @@ class DataEpicRepository @Inject constructor(
       try {
         val dates =
           apiService.getAvailableDates()
+        val list = mutableListOf<String>()
+        for (date in dates) {
+          list.add(date.date)
+        }
 
-        dates.toModel()
+        DatesCollection(
+          dates = list
+        )
       } catch (e: Exception) {
         DatesCollection(
           dates = emptyList()
@@ -28,19 +33,21 @@ class DataEpicRepository @Inject constructor(
     }
   }
 
-  override suspend fun getImageData(date: String): ImagesData {
+  override suspend fun getImageData(date: String): List<String> {
     return withContext(Dispatchers.IO) {
       try {
-        val dates = apiService.getImagesData(date = date)
+        val imagesData = apiService.getImagesData(date = date)
 
-        dates.toModel()
+        val list = mutableListOf<String>()
+        for (imageData in imagesData) {
+          val model= imageData.toModel()
+          val url= model.getImageDownloadIdentifier()
+          list.add(url)
+        }
+        list
       } catch (e: Exception) {
-        ImagesData(
-          identifier = null,
-          caption = null,
-          image = null,
-          version = null,
-          date = null
+        listOf(
+          ""
         )
       }
     }

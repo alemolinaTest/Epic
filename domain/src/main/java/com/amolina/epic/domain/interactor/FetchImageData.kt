@@ -7,7 +7,7 @@ import javax.inject.Inject
 class FetchImageData @Inject constructor(
   private val epicRepository: EpicRepository,
 ) {
-  suspend fun invoke(date: String): ImagesData {
+  suspend fun invoke(date: String): List<String> {
     return epicRepository.getImageData(date = date)
   }
 }

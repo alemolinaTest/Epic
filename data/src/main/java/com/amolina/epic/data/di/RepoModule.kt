@@ -19,10 +19,6 @@ import javax.inject.Singleton
 object RepoModule {
 
   @Provides
-  fun provideApiService(retrofit: Retrofit): ApiServices =
-    retrofit.create(ApiServices::class.java)
-
-  @Provides
   @Singleton
   fun provideEpicRepository(
     apiService: ApiServices

@@ -26,10 +26,10 @@ class MainViewModel @Inject constructor(
   private val _allDatesData = MutableLiveData<List<String>>()
   val allDatesData: LiveData<List<String>> = _allDatesData
 
-  private val _allImagesData = MutableLiveData<List<ImagesData>>()
-  val allImagesData: LiveData<List<ImagesData>> = _allImagesData
+  private val _allImagesData = MutableLiveData<List<String>>()
+  val allImagesData: LiveData<List<String>> = _allImagesData
 
-  private val _mutableImagesData = mutableListOf<ImagesData>()
+  private val _mutableImagesData = mutableListOf<String>()
 
   private fun getDates(daysCount: Int) {
 
@@ -44,7 +44,10 @@ class MainViewModel @Inject constructor(
   private fun getImagesData(selectedDates: List<String>) {
     launchHandlingStates {
       for (date in selectedDates) {
-        _mutableImagesData.add(element = fetchImageData.invoke(date))
+        val imagesData = fetchImageData.invoke(date)
+        for (image in imagesData) {
+          _mutableImagesData.add(image)
+        }
       }
       _allImagesData.value = _mutableImagesData
     }
