@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -35,9 +37,12 @@ import androidx.navigation.fragment.navArgs
 import com.amolina.epic.R
 import com.amolina.epic.compose.LoadingScreen
 import com.amolina.epic.databinding.LayoutComposeContainerBinding
+import com.amolina.epic.domain.model.ImagesDataCollection
 import com.amolina.epic.extensions.getColorCompat
 import com.amolina.epic.extensions.setStatusBarAppearance
 import com.amolina.epic.main.MainViewModel
+import com.bumptech.glide.request.RequestOptions
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,7 +77,8 @@ class PhotoFragment : Fragment(R.layout.layout_compose_container) {
             .padding(1.dp),
           topBar = { TopBar() },
           content = {
-            photosRows()
+            val imagesCollection = viewModel.allImagesData.observeAsState().value
+            photosRows(imagesCollection)
           }
         )
       }
@@ -115,20 +121,37 @@ class PhotoFragment : Fragment(R.layout.layout_compose_container) {
   }
 
   @Composable
-  fun photosRows() {
+  fun photosRows(imagesCollection: ImagesDataCollection?) {
 
-    val imagesCollection = viewModel.allImagesData.observeAsState().value
     if (imagesCollection != null) {
       Column(modifier = Modifier.fillMaxSize()) {
 
-        val listState = rememberLazyListState()
-        LazyColumn(
-          state = listState
+        val requestOptions = RequestOptions()
+          .override(500, 500)
+          .optionalCenterInside()
+
+        LazyVerticalGrid(
+          columns = GridCells.Fixed(2),
+          verticalArrangement = Arrangement.spacedBy(16.dp),
+          horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
           items(imagesCollection.imagesData) { image ->
             GlideImage(
-              imageModel = { image.url} ,
-              modifier = Modifier.padding(top = 2.dp, bottom = 2.dp),
+              modifier = Modifier
+                .clickable(
+                  onClick = { gotoPhotoDetailScreen(image.url) }
+                )
+                .padding(top = 2.dp, bottom = 2.dp),
+              imageModel = { image.url },
+              requestOptions = { requestOptions },
+              imageOptions = ImageOptions(
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center,
+                contentDescription = "main image",
+                colorFilter = null,
+                alpha = 1f
+              ),
+              previewPlaceholder = R.drawable.empty_circle,
               // shows a progress indicator when loading an image.
               loading = {
                 ConstraintLayout(
@@ -155,5 +178,13 @@ class PhotoFragment : Fragment(R.layout.layout_compose_container) {
     } else {
       LoadingScreen()
     }
+  }
+
+  private fun gotoPhotoDetailScreen(url: String) {
+
+    val directions = PhotoFragmentDirections.toPhotoDetail(
+      selectedUrl = url
+    )
+    navigation.navigate(directions)
   }
 }

@@ -34,6 +34,9 @@ class MainViewModel @Inject constructor(
 
   private val _mutableImagesData = mutableListOf<ImagesData>()
 
+  private val _selectedImageUrl = MutableLiveData<String>()
+  val selectedImageUrl: LiveData<String> = _selectedImageUrl
+
   private fun getDates(daysCount: Int) {
 
     launch {
@@ -43,17 +46,17 @@ class MainViewModel @Inject constructor(
     }
   }
 
-  private fun getImagesData(selectedDates: List<DatesData>) {
-    launch {
-      for (date in selectedDates) {
-        val imagesData = fetchImageData.invoke(date.date)
-        for (image in imagesData) {
-          _mutableImagesData.add(image.copy(url = image.getImageDownloadIdentifier()))
-        }
-      }
-      _allImagesData.value = ImagesDataCollection(imagesData = _mutableImagesData)
-    }
-  }
+//  private fun getImagesData(selectedDates: List<DatesData>) {
+//    launch {
+//      for (date in selectedDates) {
+//        val imagesData = fetchImageData.invoke(date.date)
+//        for (image in imagesData) {
+//          _mutableImagesData.add(image.copy(url = image.getImageDownloadIdentifier()))
+//        }
+//      }
+//      _allImagesData.value = ImagesDataCollection(imagesData = _mutableImagesData)
+//    }
+//  }
 
   fun getImageData(selectedDates: String) {
     launch {
@@ -64,5 +67,9 @@ class MainViewModel @Inject constructor(
       }
       _allImagesData.value = ImagesDataCollection(imagesData = _mutableImagesData)
     }
+  }
+
+  fun setSelectedImageUrl(selectedUrl: String) {
+    _selectedImageUrl.value = selectedUrl
   }
 }
