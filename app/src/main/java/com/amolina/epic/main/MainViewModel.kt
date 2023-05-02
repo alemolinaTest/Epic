@@ -6,7 +6,6 @@ import com.amolina.epic.common.AsyncStateViewModel
 import com.amolina.epic.domain.interactor.FetchDates
 import com.amolina.epic.domain.interactor.FetchImageData
 import com.amolina.epic.domain.model.DatesCollection
-import com.amolina.epic.domain.model.DatesData
 import com.amolina.epic.domain.model.ImagesData
 import com.amolina.epic.domain.model.ImagesDataCollection
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,18 +44,6 @@ class MainViewModel @Inject constructor(
       _allDatesData.value = DatesCollection(dates = selectedDates)
     }
   }
-
-//  private fun getImagesData(selectedDates: List<DatesData>) {
-//    launch {
-//      for (date in selectedDates) {
-//        val imagesData = fetchImageData.invoke(date.date)
-//        for (image in imagesData) {
-//          _mutableImagesData.add(image.copy(url = image.getImageDownloadIdentifier()))
-//        }
-//      }
-//      _allImagesData.value = ImagesDataCollection(imagesData = _mutableImagesData)
-//    }
-//  }
 
   fun getImageData(selectedDates: String) {
     launch {

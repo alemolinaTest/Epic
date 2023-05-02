@@ -3,26 +3,17 @@ package com.amolina.epic.main.days
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode.Restart
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -33,11 +24,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -141,7 +129,11 @@ class DaysFragment : Fragment(R.layout.layout_compose_container) {
               ) {
 
               Icon(
-                painter = painterResource(R.drawable.empty_circle),
+                painter = if (!day.downloaded) {
+                  painterResource(R.drawable.empty_circle)
+                } else {
+                  painterResource(R.drawable.check)
+                },
                 tint = Color.Black,
                 contentDescription = "dayDescription"
               )
@@ -163,6 +155,4 @@ class DaysFragment : Fragment(R.layout.layout_compose_container) {
     )
     navigation.navigate(directions)
   }
-
-
 }
