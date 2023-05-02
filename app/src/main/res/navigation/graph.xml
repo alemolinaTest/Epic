@@ -2,8 +2,19 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/go_graph"
-    app:startDestination="@id/dayFragment"
+    app:startDestination="@id/splashFragment"
     >
+
+  <fragment
+      android:id="@+id/splashFragment"
+      android:name="com.amolina.epic.splash.SplashFragment"
+      >
+    <action
+        android:id="@+id/to_day_screen"
+        app:destination="@id/dayFragment"
+        app:launchSingleTop="true"
+        />
+  </fragment>
 
   <fragment
       android:id="@+id/dayFragment"
