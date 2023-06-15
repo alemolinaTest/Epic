@@ -50,8 +50,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PhotoFragment : Fragment(R.layout.layout_compose_container) {
 
-  private val binding by viewBinding(LayoutComposeContainerBinding::bind)
-
   private val viewModel: MainViewModel by activityViewModels()
   private val navigation by lazy { findNavController() }
 
