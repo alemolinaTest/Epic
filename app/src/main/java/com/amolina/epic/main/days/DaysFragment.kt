@@ -3,6 +3,7 @@ package com.amolina.epic.main.days
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -40,6 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
   ) {
     super.onViewCreated(view,
                         savedInstanceState)
+    setBackPressHandler()
 
     (view as ComposeView).apply {
       setContent {
@@ -53,6 +55,15 @@ import dagger.hilt.android.AndroidEntryPoint
                  })
       }
     }
+  }
+
+  private fun setBackPressHandler() {
+    activity?.onBackPressedDispatcher?.addCallback(this,
+                                                   object: OnBackPressedCallback(true) {
+                                                     override fun handleOnBackPressed() {
+                                                       requireActivity().finish()
+                                                     }
+                                                   })
   }
 
   override fun onResume() {
@@ -79,7 +90,7 @@ import dagger.hilt.android.AndroidEntryPoint
               },
               backgroundColor = Color.White,
               navigationIcon = {
-                IconButton(onClick = { requireActivity().onBackPressed() }) {
+                IconButton(onClick = { requireActivity().finish() }) {
                   Icon(Filled.ArrowBack,
                        "")
                 }
