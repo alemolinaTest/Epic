@@ -97,6 +97,7 @@ import dagger.hilt.android.AndroidEntryPoint
         val listState = rememberLazyListState()
         LazyColumn(state = listState) {
           items(daysCollection.dates) { day ->
+            val date = day.date
             Row(
               Modifier
                 .clickable(onClick = { gotoPhotosScreen(day.date) })
@@ -112,7 +113,7 @@ import dagger.hilt.android.AndroidEntryPoint
                    contentDescription = "dayDescription")
               Spacer(modifier = Modifier.padding(start = 10.dp,
                                                  end = 10.dp))
-              Text(text = day.date,
+              Text(text = "Earth at $date",
                    color = Color.Black)
             }
           }

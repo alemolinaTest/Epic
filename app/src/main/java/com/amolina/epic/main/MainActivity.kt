@@ -23,12 +23,6 @@ class MainActivity : AppCompatActivity() {
     // Set up nav controller
     val navHostFragment =
       supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
-//    //NavigationUI.setupActionBarWithNavController(this, navHostFragment.navController)
-    //
-    //    mainActivityViewModel.allDatesData.observe(this) {
-    //      if (it.dates.isEmpty()) {
-    //
-    //      }
-    //    }
+
   }
 }
