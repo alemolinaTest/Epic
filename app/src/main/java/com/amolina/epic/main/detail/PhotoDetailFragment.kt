@@ -101,7 +101,7 @@ import dagger.hilt.android.AndroidEntryPoint
     TopAppBar(modifier = Modifier.background(Color.White),
               title = {
                 Text(
-                  text = "Photos Detail",
+                  text = "Zoomable Photo Detail",
                   color = Color.Green,
                 )
               },

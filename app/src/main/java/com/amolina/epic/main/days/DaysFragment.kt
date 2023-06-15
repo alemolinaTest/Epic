@@ -39,8 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
     view: View,
     savedInstanceState: Bundle?,
   ) {
-    super.onViewCreated(view,
-                        savedInstanceState)
+    super.onViewCreated(view, savedInstanceState)
     setBackPressHandler()
 
     (view as ComposeView).apply {

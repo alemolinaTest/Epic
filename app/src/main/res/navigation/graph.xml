@@ -43,6 +43,12 @@
         app:launchSingleTop="true"
         />
 
+    <action
+        android:id="@+id/to_images_carousel"
+        app:destination="@id/imagesCarouselFragment"
+        app:launchSingleTop="true"
+        />
+
   </fragment>
 
   <fragment
@@ -56,5 +62,14 @@
         />
 
   </fragment>
+
+  <fragment
+  android:id="@+id/imagesCarouselFragment"
+  android:name="com.amolina.epic.main.carousel.ImagesCrousel"
+  >
+
+
+
+</fragment>
 
 </navigation>

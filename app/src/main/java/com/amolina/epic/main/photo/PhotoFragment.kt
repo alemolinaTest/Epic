@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -105,7 +106,12 @@ import dagger.hilt.android.AndroidEntryPoint
                        "")
                 }
               },
-              actions = {},
+              actions = {
+                IconButton(onClick = { gotoPhotoCarouselScreen() }) {
+                  Icon(painter = painterResource(id = androidx.core.R.drawable.ic_call_answer_video),
+                       contentDescription = "Leer después")
+                }
+              },
               elevation = 2.dp)
   }
 
@@ -158,6 +164,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
   private fun gotoPhotoDetailScreen(url: String) {
     val directions = PhotoFragmentDirections.toPhotoDetail(selectedUrl = url)
+    navigation.navigate(directions)
+  }
+
+  private fun gotoPhotoCarouselScreen() {
+    val directions = PhotoFragmentDirections.toImagesCarousel()
     navigation.navigate(directions)
   }
 }
