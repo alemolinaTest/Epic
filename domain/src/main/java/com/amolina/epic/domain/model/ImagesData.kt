@@ -6,7 +6,6 @@ data class ImagesData(
   var image: String? = null,
   var version: String? = null,
   var date: String? = null,
-  var searchDate: String,
   var url: String = "",
   var downloaded: Boolean = false
 ) {

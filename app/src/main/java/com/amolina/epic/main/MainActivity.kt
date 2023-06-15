@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import com.amolina.epic.R
 import com.amolina.epic.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,11 +24,11 @@ class MainActivity : AppCompatActivity() {
     val navHostFragment =
       supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
 //    //NavigationUI.setupActionBarWithNavController(this, navHostFragment.navController)
-//
-//    mainActivityViewModel.allDatesData.observe(this) {
-//      if (it.dates.isEmpty()) {
-//
-//      }
-//    }
+    //
+    //    mainActivityViewModel.allDatesData.observe(this) {
+    //      if (it.dates.isEmpty()) {
+    //
+    //      }
+    //    }
   }
 }

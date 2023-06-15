@@ -14,45 +14,46 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
+@Module @InstallIn(SingletonComponent::class) object AppModule {
+  @Provides
+  @Singleton
+  fun provideBaseUrl() = BASE_URL
 
-    @Provides
-    @Singleton
-    fun provideBaseUrl() = BASE_URL
+  @Provides
+  @Singleton
+  fun provideConnectionTimeout() = 1000
 
-    @Provides
-    @Singleton
-    fun provideConnectionTimeout() = 1000
+  @Provides
+  @Singleton
+  fun provideGson(): Gson = GsonBuilder()
+    .setLenient()
+    .create()
 
-    @Provides
-    @Singleton
-    fun provideGson(): Gson = GsonBuilder().setLenient().create()
+  @Singleton
+  @Provides
+  fun provideOkHttpClient(): OkHttpClient {
+    val loggingInterceptor = HttpLoggingInterceptor()
+    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
+    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
-    @Singleton
-    @Provides
-    fun provideOkHttpClient():OkHttpClient {
+    return OkHttpClient
+      .Builder()
+      .addInterceptor(loggingInterceptor)
+      .build()
+  }
 
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-       return OkHttpClient
-            .Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
-    }
-
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(baseUrl: String, gson: Gson, client: OkHttpClient): ApiServices =
-        Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-            .create(ApiServices::class.java)
+  @Provides
+  @Singleton
+  fun provideRetrofit(
+    baseUrl: String,
+    gson: Gson,
+    client: OkHttpClient,
+  ): ApiServices = Retrofit
+    .Builder()
+    .baseUrl(baseUrl)
+    .client(client)
+    .addConverterFactory(GsonConverterFactory.create(gson))
+    .build()
+    .create(ApiServices::class.java)
 }
 

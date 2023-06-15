@@ -6,16 +6,8 @@ import android.view.View
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,23 +26,24 @@ import com.amolina.epic.extensions.setStatusBarAppearance
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
-@AndroidEntryPoint
-class SplashFragment : Fragment(R.layout.layout_compose_container) {
-
+@AndroidEntryPoint class SplashFragment: Fragment(R.layout.layout_compose_container) {
   private val navigation by lazy { findNavController() }
 
   @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?,
+  ) {
+    super.onViewCreated(view,
+                        savedInstanceState)
 
     (view as ComposeView).apply {
       setContent {
-        SplashScreen(
-          modifier = Modifier.padding(2.dp),
-          valid = true,
-          onStart = {},
-          onSplashEndedInvalid = { gotoDayScreen() },
-          onSplashEndedValid = { gotoDayScreen() })
+        SplashScreen(modifier = Modifier.padding(2.dp),
+                     valid = true,
+                     onStart = {},
+                     onSplashEndedInvalid = { gotoDayScreen() },
+                     onSplashEndedValid = { gotoDayScreen() })
       }
     }
   }
@@ -62,7 +55,8 @@ class SplashFragment : Fragment(R.layout.layout_compose_container) {
 
   private fun setLightStatusBar() {
     with(requireActivity()) {
-      setStatusBarAppearance(true, requireView())
+      setStatusBarAppearance(true,
+                             requireView())
       requireActivity().window.statusBarColor = resources.getColorCompat(R.color.white)
     }
   }
@@ -88,14 +82,13 @@ class SplashFragment : Fragment(R.layout.layout_compose_container) {
     LaunchedEffect(key1 = valid) {
       valid?.let { valid ->
         val animateToColor = if (valid) Color.Green else Color.Red
-        color.animateTo(animateToColor, animationSpec = tween(500))
+        color.animateTo(animateToColor,
+                        animationSpec = tween(500))
       }
     }
-    Column(
-      modifier = modifier.fillMaxSize(),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = modifier.fillMaxSize(),
+           verticalArrangement = Arrangement.Center,
+           horizontalAlignment = Alignment.CenterHorizontally) {
       Image(
         painter = painterResource(id = R.drawable.ic_launcher_foreground),
         contentDescription = null,
@@ -119,7 +112,6 @@ class SplashFragment : Fragment(R.layout.layout_compose_container) {
   }
 
   private fun gotoDayScreen() {
-
     val directions = SplashFragmentDirections.toDayScreen()
     navigation.navigate(directions)
   }

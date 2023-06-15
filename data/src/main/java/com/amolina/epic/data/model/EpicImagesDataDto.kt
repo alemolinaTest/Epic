@@ -12,14 +12,13 @@ class EpicImagesDataDto(
   var date: String? = null,
 ) {
 
-  fun toModel(searchDate: String): ImagesData {
+  fun toModel(): ImagesData {
     return ImagesData(
       identifier = identifier.toString(),
       caption = caption,
       image = image.toString(),
       version = version,
       date = date,
-      searchDate = searchDate
     )
   }
 }

@@ -20,31 +20,31 @@ fun CoroutineContext?.notInflight(): Boolean = !inflight()
 fun <T> debounce(
     waitMs: Long = 333L,
     coroutineScope: CoroutineScope,
-    destinationFunction: (T) -> Unit
+    destinationFunction: (T) -> Unit,
 ): (T) -> Unit {
-    var debounceJob: Job? = null
-    return { param: T ->
-        debounceJob?.cancel()
-        debounceJob = coroutineScope.launch {
-            delay(waitMs)
-            destinationFunction(param)
-        }
+  var debounceJob: Job? = null
+  return { param: T ->
+    debounceJob?.cancel()
+    debounceJob = coroutineScope.launch {
+      delay(waitMs)
+      destinationFunction(param)
     }
+  }
 }
 
 fun <T> throttleFirst(
     waitMs: Long = 333L,
     coroutineScope: CoroutineScope,
-    destinationFunction: (T) -> Unit
+    destinationFunction: (T) -> Unit,
 ): (T) -> Unit {
-    var debounceJob: Job? = null
-    return { param: T ->
-        if (debounceJob == null) {
-            debounceJob = coroutineScope.launch {
-                destinationFunction.invoke(param)
-                delay(waitMs)
-                debounceJob = null
-            }
-        }
+  var debounceJob: Job? = null
+  return { param: T ->
+    if (debounceJob == null) {
+      debounceJob = coroutineScope.launch {
+        destinationFunction.invoke(param)
+        delay(waitMs)
+        debounceJob = null
+      }
     }
+  }
 }

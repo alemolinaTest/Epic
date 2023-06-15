@@ -7,7 +7,5 @@ import javax.inject.Inject
 class FetchDates @Inject constructor(
   private val epicRepository: EpicRepository,
 ) {
-  suspend fun invoke(): List<DatesData> {
-    return epicRepository.getAllDates()
-  }
+  suspend operator fun invoke(): List<DatesData>? = epicRepository.getAllDates()
 }
