@@ -25,9 +25,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.amolina.epic.R
 import com.amolina.epic.compose.LoadingScreen
+import com.amolina.epic.domain.model.DatesCollection
 import com.amolina.epic.extensions.getColorCompat
 import com.amolina.epic.extensions.setStatusBarAppearance
 import com.amolina.epic.main.MainViewModel
+import com.amolina.epic.main.MainViewModel.ResultsState.*
+import com.amolina.epic.main.photo.PhotoFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint class DaysFragment: Fragment(R.layout.layout_compose_container) {
@@ -39,7 +42,8 @@ import dagger.hilt.android.AndroidEntryPoint
     view: View,
     savedInstanceState: Bundle?,
   ) {
-    super.onViewCreated(view, savedInstanceState)
+    super.onViewCreated(view,
+                        savedInstanceState)
     setBackPressHandler()
 
     (view as ComposeView).apply {
@@ -53,6 +57,15 @@ import dagger.hilt.android.AndroidEntryPoint
                    daysRows()
                  })
       }
+    }
+  }
+
+  @Composable
+  private fun showRetryDialog() {
+    Column(modifier = Modifier
+      .padding(24.dp)
+      .clickable { viewModel.getDates(MainViewModel.DAYS_COUNT) }) {
+      Text(text = "Please retry")
     }
   }
 
@@ -94,14 +107,31 @@ import dagger.hilt.android.AndroidEntryPoint
                        "")
                 }
               },
-              actions = {},
+              actions = {
+                IconButton(onClick = { refreshData() }) {
+                  Icon(painter = painterResource(id = R.drawable.ic_refresh),
+                       contentDescription = "Reset Data")
+                }
+              },
               elevation = 2.dp)
   }
 
   @Composable
   fun daysRows() {
+    val resultScreenState = viewModel.resultsState.observeAsState().value
     val daysCollection = viewModel.allDatesData.observeAsState().value
 
+    resultScreenState?.let {
+      when (resultScreenState) {
+        is Error -> showRetryDialog()
+        is Complete -> showData(daysCollection)
+        is Loading -> LoadingScreen()
+      }
+    }
+  }
+
+  @Composable
+  private fun showData(daysCollection: DatesCollection?) {
     if (daysCollection != null) {
       Column(modifier = Modifier.fillMaxSize()) {
         val listState = rememberLazyListState()
@@ -129,13 +159,15 @@ import dagger.hilt.android.AndroidEntryPoint
           }
         }
       }
-    } else {
-      LoadingScreen()
     }
   }
 
   private fun gotoPhotosScreen(day: String) {
     val directions = DaysFragmentDirections.toPhotoScreen(selectedDay = day)
     navigation.navigate(directions)
+  }
+
+  private fun refreshData() {
+    viewModel.refreshAllData()
   }
 }

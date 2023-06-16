@@ -108,8 +108,8 @@ import dagger.hilt.android.AndroidEntryPoint
               },
               actions = {
                 IconButton(onClick = { gotoPhotoCarouselScreen() }) {
-                  Icon(painter = painterResource(id = androidx.core.R.drawable.ic_call_answer_video),
-                       contentDescription = "Leer después")
+                  Icon(painter = painterResource(id = R.drawable.ic_finger_swipe),
+                       contentDescription = "Carousel View")
                 }
               },
               elevation = 2.dp)
@@ -170,5 +170,9 @@ import dagger.hilt.android.AndroidEntryPoint
   private fun gotoPhotoCarouselScreen() {
     val directions = PhotoFragmentDirections.toImagesCarousel()
     navigation.navigate(directions)
+  }
+
+  private fun refreshData() {
+    viewModel.getDates(MainViewModel.DAYS_COUNT)
   }
 }

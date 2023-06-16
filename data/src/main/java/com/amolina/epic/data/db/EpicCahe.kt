@@ -24,7 +24,7 @@ class EpicCache(private val epicDataBase: EpicDataBase) {
     })
   }
 
-  private suspend fun clearAllDates() {
+  suspend fun clearAllDates() {
     dao.deleteAllDates()
   }
 
@@ -43,7 +43,7 @@ class EpicCache(private val epicDataBase: EpicDataBase) {
     })
   }
 
-  private suspend fun clearAllImages() {
+  suspend fun clearAllImages() {
     dao.deleteAllDates()
   }
 

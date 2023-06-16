@@ -32,7 +32,22 @@ class DataEpicRepository @Inject constructor(
     }
   }
 
-  override suspend fun getImageData(searchDate: String): List<ImagesData>? {
+  override suspend fun getAllRefreshedDates(): List<DatesData>? {
+    return withContext(Dispatchers.IO) {
+      try { //fetch from database
+        cache.clearAllDates()
+        cache.clearAllImages()
+        val dates = apiService.getAvailableDates()
+        val list = dates.map { it.toModel() } //save on cache
+        cache.insertDates(list)
+        list
+      } catch (e: Exception) {
+        null
+      }
+    }
+  }
+
+  override suspend fun getImagesData(searchDate: String): List<ImagesData>? {
     return withContext(Dispatchers.IO) {
       try { //fetch from database
         val cachedDates = cache.getImagesForDate(searchDate = searchDate)

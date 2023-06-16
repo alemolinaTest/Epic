@@ -25,6 +25,12 @@
         app:destination="@id/photoFragment"
         app:launchSingleTop="true"
         />
+
+    <action
+        android:id="@+id/to_images_carousel"
+        app:destination="@id/imagesCarouselFragment"
+        app:launchSingleTop="true"
+        />
   </fragment>
 
   <fragment

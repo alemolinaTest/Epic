@@ -6,16 +6,18 @@ import android.view.View
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +35,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint class ImagesCrousel: Fragment(R.layout.layout_compose_container) {
   private val viewModel: MainViewModel by activityViewModels()
@@ -91,11 +95,20 @@ import dagger.hilt.android.AndroidEntryPoint
     listImageUrl: List<String> = listOf(),
   ) {
     val state = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
     HorizontalPager(state = state,
                     pageCount = listImageUrl.size,
                     modifier = modifier) { pagerScope ->
-      Box(contentAlignment = Alignment.BottomCenter) {
-        carouselImage(imageUrl = listImageUrl[pagerScope])
+      Column(modifier = Modifier.fillMaxSize(),
+             horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(contentAlignment = Alignment.BottomCenter) {
+          carouselImage(imageUrl = listImageUrl[pagerScope])
+        }
+        Box(contentAlignment = Alignment.BottomCenter) {
+          sliderButtons(pagerState = state,
+                        coroutineScope = coroutineScope,
+                        maxItemsValue = listImageUrl.size)
+        }
       }
     }
   }
@@ -133,5 +146,47 @@ import dagger.hilt.android.AndroidEntryPoint
                failure = {
                  Text(text = "image request failed.")
                })
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Composable
+  fun sliderButtons(
+    pagerState: PagerState,
+    coroutineScope: CoroutineScope,
+    maxItemsValue: Int,
+  ) {
+    Row(modifier = Modifier.padding(bottom = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+      val prevButtonVisible = remember {
+        derivedStateOf {
+          pagerState.currentPage > 0
+        }
+      }
+      val nextButtonVisible = remember {
+        derivedStateOf {
+          pagerState.currentPage < maxItemsValue
+        }
+      }
+
+      Button(
+        enabled = prevButtonVisible.value,
+        onClick = {
+          val prevPageIndex = pagerState.currentPage - 1
+          coroutineScope.launch { pagerState.animateScrollToPage(prevPageIndex) }
+        },
+      ) {
+        Text(text = "Prev")
+      }
+
+      Button(
+        enabled = nextButtonVisible.value,
+        onClick = {
+          val nextPageIndex = pagerState.currentPage + 1
+          coroutineScope.launch { pagerState.animateScrollToPage(nextPageIndex) }
+        },
+      ) {
+        Text(text = "Next")
+      }
+    }
   }
 }
