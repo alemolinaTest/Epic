@@ -1,9 +1,7 @@
 package com.amolina.epic.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import android.provider.SyncStateContract.Helpers.insert
+import androidx.room.*
 import com.amolina.epic.data.model.EpicDatesDto
 import com.amolina.epic.data.model.EpicImagesDataDto
 
@@ -40,4 +38,25 @@ import com.amolina.epic.data.model.EpicImagesDataDto
 
   @Query("DELETE FROM ${DateImageEntity.TABLE_NAME}")
   suspend fun deleteAllImages()
+
+  @Transaction
+  @Query("SELECT * FROM Playlist")
+  fun getPlaylistWithSongs(): List<Playlist>
+
+  @Transaction
+  @Query("SELECT * FROM CourseName")
+  fun getSongsWithPlaylists(): List<SongsList>
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun saveSong(date: MtmSong)
+
+  @Delete
+  suspend fun deleteSong(song: MtmSong)
+
+  @Transaction
+  suspend fun insertAndDeleteInTransaction(newSong: MtmSong, oldSong: MtmSong) {
+    // Anything inside this method runs in a single transaction.
+    deleteSong(oldSong)
+    saveSong(newSong)
+  }
 }
