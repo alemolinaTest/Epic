@@ -1,4 +1,4 @@
-package com.amolina.epic.domain.testing
+package com.amolina.epic.data.testing
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

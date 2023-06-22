@@ -5,7 +5,7 @@ import com.amolina.epic.data.db.EpicCache
 import com.amolina.epic.data.model.EpicDatesDto
 import com.amolina.epic.domain.model.DatesData
 import com.amolina.epic.domain.others.InvalidListException
-import com.amolina.epic.domain.testing.MainCoroutineRule
+import com.amolina.epic.data.testing.MainCoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
